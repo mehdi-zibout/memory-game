@@ -1,20 +1,22 @@
+import { splitProps } from "solid-js";
 import type { JSX } from "solid-js/jsx-runtime";
 
-export function Button({
-  isActive = false,
-  children,
-  buttonType,
+export function Button(props: ButtonProps) {
+  const [, others] = splitProps(props, [
+    "isActive",
+    "buttonType",
+    "children",
+    "class",
+  ]);
 
-  ...props
-}: ButtonProps) {
   return (
     <button
-      {...props}
-      class={`transition duration-300 capitalize rounded-full ${
+      {...others}
+      class={`transition duration-200 capitalize rounded-full  ${
         props.class
-      } ${getButtonClasses(isActive, buttonType)}`}
+      } ${getButtonClasses(props.isActive ?? false, props.buttonType)}`}
     >
-      {children}
+      {props.children}
     </button>
   );
 }
@@ -28,11 +30,11 @@ type ButtonProps = {
 function getButtonClasses(isActive: Boolean, type?: ButtonType): string {
   switch (type) {
     case "MENUBIG":
-      return "text-h2 text-white  w-[541px] h-[70px] bg-orange hover:bg-[#FFB84A]";
+      return "text-body md:text-h2 text-white w-[279px] h-[48px]  md:w-[541px] md:h-[70px] bg-orange hover:bg-[#FFB84A]";
     case "MENUSELECT":
-      return `text-[1.625rem] text-white px-[73px] py-3 ${
-        isActive ? "bg-blue-400" : "bg-blue-100"
-      } hover:bg-blue-300 hover:bg-[#FFB84A]`;
+      return `text-[1rem] md:text-[1.625rem] text-white pt-[11px] pb-[9px] ${
+        isActive ? "bg-blue-400" : "bg-blue-100 hover:bg-blue-300"
+      } `;
     case "PRIMARY":
       return "text-h3 text-white py-3 px-7 bg-orange hover:bg-[#FFB84A]";
     case "SECONDARY":
