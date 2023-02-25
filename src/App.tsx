@@ -1,9 +1,10 @@
 import { Component, createSignal } from "solid-js";
 import { Config } from "./utils/game_config";
+import GameView from "./views/GameView";
 import StartGame from "./views/StartGame";
 
 export const [config, setConfig] = createSignal<Config>({
-  theme: "NUMBERS",
+  theme: "ICONS",
   nPlayers: 1,
   gridSize: 4,
 });
@@ -30,7 +31,8 @@ const App: Component = () => {
     //     <Button buttonType="SECONDARY">New Game</Button>
     //   </div>
     // </div>
-    <StartGame />
+    // <StartGame />
+    <GameView />
   );
 };
 

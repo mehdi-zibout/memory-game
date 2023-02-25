@@ -36,7 +36,7 @@ function getButtonClasses(isActive: Boolean, type?: ButtonType): string {
         isActive ? "bg-blue-400" : "bg-blue-100 hover:bg-blue-300"
       } `;
     case "PRIMARY":
-      return "text-h3 text-white py-3 px-7 bg-orange hover:bg-[#FFB84A]";
+      return "text-[1rem] md:text-h3 text-white px-[18.5px] py-[10px] md:py-3 md:px-7 bg-orange hover:bg-[#FFB84A]";
     case "SECONDARY":
       return "text-h3 text-blue-400 bg-[#DFE7EC] py-3 px-7 hover:text-white hover:bg-blue-300";
     default:
