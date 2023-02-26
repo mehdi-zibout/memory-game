@@ -1,5 +1,5 @@
 import { createEffect, createSignal } from "solid-js";
-import { getGridSize, getTheme } from "../utils/game_config";
+import { getGridSize, getNPlayers, getTheme } from "../utils/game_config";
 import {
   Flask,
   Anchor,
@@ -61,6 +61,7 @@ function Cell(props) {
     }
   };
   const handleOnClick = () => {
+    if (getNPlayers() === 1 && !props.startCount) props.setStartCount(true);
     setStatus("ACTIVE");
     props.setChosenCells(
       props.chosenCells().cells[0] !== null

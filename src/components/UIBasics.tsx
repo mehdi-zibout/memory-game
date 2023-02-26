@@ -24,12 +24,40 @@ export function Button(props: ButtonProps) {
 export function Card(props: JSX.HTMLAttributes<HTMLDivElement>) {
   const [, others] = splitProps(props, ["class", "children"]);
   return (
-    <div {...props} class={`bg-gray rounded-[20px] ${props.class}`}>
+    <div {...others} class={`bg-gray rounded-[20px] ${props.class}`}>
       {props.children}
     </div>
   );
 }
 
+export function Score(props) {
+  return (
+    <>
+      <div
+        class={`${
+          props.isActive ? "bg-orange text-white" : "bg-[#DFE7EC] text-blue-400"
+        } w-full rounded-[5px] pt-[10px] pb-[9px] flex justify-center items-center flex-col relative`}
+      >
+        {props.isActive && (
+          <div
+            style={{
+              "border-left": "8px solid transparent",
+              "border-right": "8px solid transparent",
+              "border-bottom": "8px solid #FDA214",
+            }}
+            class="w-0 h-0 mx-auto absolute  inset-0 -top-2"
+          ></div>
+        )}
+        <div
+          class={`${props.isActive ? "" : "text-blue-200"} text-[0.9375rem]`}
+        >
+          {props.title}
+        </div>
+        <div class={`text-[1.5rem]`}>{props.value}</div>
+      </div>
+    </>
+  );
+}
 type ButtonType = "MENUBIG" | "MENUSELECT" | "PRIMARY" | "SECONDARY";
 type ButtonProps = {
   isActive?: Boolean;

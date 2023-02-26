@@ -1,11 +1,12 @@
-import { createEffect, createSignal, For } from "solid-js";
+import { createEffect, createSignal, For, untrack } from "solid-js";
 import { Dynamic } from "solid-js/web";
 import Cell from "../components/Cell";
+import Footer from "../components/Footer";
 import { GameViewLogo as Logo } from "../components/Icons";
 import Modal from "../components/Modal";
-import { Button } from "../components/UIBasics";
+import { Button, Score } from "../components/UIBasics";
 import { newBoard } from "../utils/game";
-import { getGridSize } from "../utils/game_config";
+import { getGridSize, getNPlayers } from "../utils/game_config";
 
 type GameViewProps = {
   goToMainMenu: () => void;
@@ -15,7 +16,7 @@ function GameView(props: GameViewProps) {
   const [showMenu, setShowMenu] = createSignal(false);
   const [boardKey, setBoardKey] = createSignal(0);
   return (
-    <main class="p-6 flex flex-col justify-between">
+    <main class="p-6 flex flex-col justify-between h-screen w-screen overflow-hidden">
       <nav class="flex justify-between items-center mb-20">
         <Logo />
         <Button onclick={() => setShowMenu(true)} buttonType="PRIMARY">
@@ -23,6 +24,7 @@ function GameView(props: GameViewProps) {
         </Button>
       </nav>
       {Board(boardKey())}
+
       <Modal
         cardClass="w-full p-6"
         showModal={setShowMenu}
@@ -65,12 +67,20 @@ function Board(key: number) {
     cells: [number | null, number | null];
     isMatch: Boolean;
   }>({ cells: [null, null], isMatch: false });
+  const [startCount, setStartCount] = createSignal(false);
+  const [nMoves, setNMoves] = createSignal(0);
+  const [turn, setTurn] = createSignal(0);
   const isChoseTwo = () =>
     chosenCells().cells[0] !== null && chosenCells().cells[1] !== null;
   const initChosenCells = () =>
     setChosenCells({ cells: [null, null], isMatch: false });
   createEffect(() => {
     if (isChoseTwo()) {
+      untrack(() => {
+        if (getNPlayers() === 1) setNMoves((moves) => moves + 1);
+        else setTurn((turn) => (turn + 1) % getNPlayers());
+      });
+
       setTimeout(
         () => {
           initChosenCells();
@@ -80,25 +90,30 @@ function Board(key: number) {
     }
   });
   return (
-    <div
-      class={`grid  ${
-        getGridSize() === 4
-          ? "grid-cols-4 gap-[12.29px]"
-          : "grid-cols-6 gap-[9.12px]"
-      }`}
-    >
-      <For each={gameState}>
-        {(cell, index) => (
-          <Cell
-            index={index()}
-            value={cell}
-            setChosenCells={setChosenCells}
-            chosenCells={chosenCells}
-            gameState={gameState}
-            isChoseTwo={isChoseTwo}
-          />
-        )}
-      </For>
-    </div>
+    <>
+      <div
+        class={`grid  ${
+          getGridSize() === 4
+            ? "grid-cols-4 gap-[12.29px]"
+            : "grid-cols-6 gap-[9.12px]"
+        }`}
+      >
+        <For each={gameState}>
+          {(cell, index) => (
+            <Cell
+              index={index()}
+              value={cell}
+              setChosenCells={setChosenCells}
+              chosenCells={chosenCells}
+              gameState={gameState}
+              isChoseTwo={isChoseTwo}
+              startCount={startCount()}
+              setStartCount={setStartCount}
+            />
+          )}
+        </For>
+      </div>
+      <Footer startCount={startCount()} nMoves={nMoves()} />
+    </>
   );
 }
