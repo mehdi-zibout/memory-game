@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from "solid-js";
+import { createEffect, createSignal, untrack } from "solid-js";
 import { getGridSize, getNPlayers, getTheme } from "../utils/game_config";
 import {
   Flask,

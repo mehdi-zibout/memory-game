@@ -1,4 +1,4 @@
-import { createSignal } from "solid-js";
+import { createEffect, createSignal, on } from "solid-js";
 import { getNPlayers } from "../utils/game_config";
 import { Score } from "./UIBasics";
 
@@ -6,9 +6,18 @@ function Footer(props) {
   switch (getNPlayers()) {
     case 1:
       const [duration, setDuration] = createSignal(0);
-      setInterval(() => {
-        if (props.startCount) setDuration((duration) => duration + 1000);
+
+      const timer = setInterval(() => {
+        if (props.startCount && !props.showMenu())
+          setDuration((duration) => duration + 1000);
       }, 1000);
+
+      createEffect(() => {
+        if (props.isGameFinished) {
+          clearInterval(timer);
+        }
+      });
+
       return (
         <div class="grid grid-cols-2 gap-x-6 mt-6">
           <Score
@@ -24,8 +33,16 @@ function Footer(props) {
     case 2:
       return (
         <div class="grid grid-cols-2 gap-x-6 mt-6">
-          <Score title="P1" value="4" />
-          <Score isActive title="P2" value="4" />
+          <Score
+            isActive={0 === props.turn}
+            title="P1"
+            value={props.scores[0]}
+          />
+          <Score
+            isActive={1 === props.turn}
+            title="P2"
+            value={props.scores[1]}
+          />
         </div>
       );
     case 3:

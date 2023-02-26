@@ -1,4 +1,11 @@
-import { createEffect, createSignal, For, untrack } from "solid-js";
+import {
+  createComputed,
+  createEffect,
+  createMemo,
+  createSignal,
+  For,
+  untrack,
+} from "solid-js";
 import { Dynamic } from "solid-js/web";
 import Cell from "../components/Cell";
 import Footer from "../components/Footer";
@@ -12,8 +19,9 @@ type GameViewProps = {
   goToMainMenu: () => void;
 };
 
+const [showMenu, setShowMenu] = createSignal(false);
+
 function GameView(props: GameViewProps) {
-  const [showMenu, setShowMenu] = createSignal(false);
   const [boardKey, setBoardKey] = createSignal(0);
   return (
     <main class="p-6 flex flex-col justify-between h-screen w-screen overflow-hidden">
@@ -69,7 +77,11 @@ function Board(key: number) {
   }>({ cells: [null, null], isMatch: false });
   const [startCount, setStartCount] = createSignal(false);
   const [nMoves, setNMoves] = createSignal(0);
+  const [scores, setScores] = createSignal([0, 0, 0, 0]);
   const [turn, setTurn] = createSignal(0);
+  const isGameFinished = () =>
+    2 * scores().reduce((p, c) => p + c) === getGridSize() * getGridSize();
+
   const isChoseTwo = () =>
     chosenCells().cells[0] !== null && chosenCells().cells[1] !== null;
   const initChosenCells = () =>
@@ -78,7 +90,13 @@ function Board(key: number) {
     if (isChoseTwo()) {
       untrack(() => {
         if (getNPlayers() === 1) setNMoves((moves) => moves + 1);
-        else setTurn((turn) => (turn + 1) % getNPlayers());
+        if (chosenCells().isMatch) {
+          const newScores = [...scores()];
+          newScores[turn()] += 1;
+          setScores(newScores);
+        } else {
+          setTurn((turn) => (turn + 1) % getNPlayers());
+        }
       });
 
       setTimeout(
@@ -109,11 +127,21 @@ function Board(key: number) {
               isChoseTwo={isChoseTwo}
               startCount={startCount()}
               setStartCount={setStartCount}
+              setScores={setScores}
+              scores={scores()}
+              turn={turn()}
             />
           )}
         </For>
       </div>
-      <Footer startCount={startCount()} nMoves={nMoves()} />
+      <Footer
+        startCount={startCount()}
+        nMoves={nMoves()}
+        scores={scores()}
+        turn={turn()}
+        isGameFinished={isGameFinished()}
+        showMenu={showMenu}
+      />
     </>
   );
 }
