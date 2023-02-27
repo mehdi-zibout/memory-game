@@ -19,7 +19,7 @@ function Footer(props) {
       });
 
       return (
-        <div class="grid grid-cols-2 gap-x-6 mt-6">
+        <div class="grid grid-cols-2 gap-x-6 mt-6 w-full md:w-[550px] mx-auto">
           <Score
             title="Time"
             value={new Date(duration()).toLocaleTimeString("fr", {
@@ -48,18 +48,46 @@ function Footer(props) {
     case 3:
       return (
         <div class="grid grid-cols-3 gap-x-6 mt-6">
-          <Score title="P1" value="4" />
-          <Score isActive title="P2" value="4" />
-          <Score title="P3" value="2" />
+          <Score
+            isActive={0 === props.turn}
+            title="P1"
+            value={props.scores[0]}
+          />
+          <Score
+            isActive={1 === props.turn}
+            title="P2"
+            value={props.scores[1]}
+          />
+          <Score
+            isActive={2 === props.turn}
+            title="P3"
+            value={props.scores[2]}
+          />
         </div>
       );
     case 4:
       return (
         <div class="grid grid-cols-4 gap-x-6 mt-6">
-          <Score title="P1" value="4" />
-          <Score isActive title="P2" value="4" />
-          <Score title="P3" value="2" />
-          <Score title="P4" value="0" />
+          <Score
+            isActive={0 === props.turn}
+            title="Player 1"
+            value={props.scores[0]}
+          />
+          <Score
+            isActive={1 === props.turn}
+            title="Player 2"
+            value={props.scores[1]}
+          />
+          <Score
+            isActive={2 === props.turn}
+            title="Player 3"
+            value={props.scores[2]}
+          />
+          <Score
+            isActive={3 === props.turn}
+            title="Player 4"
+            value={props.scores[3]}
+          />
         </div>
       );
   }

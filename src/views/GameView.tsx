@@ -6,12 +6,11 @@ import {
   For,
   untrack,
 } from "solid-js";
-import { Dynamic } from "solid-js/web";
 import Cell from "../components/Cell";
 import Footer from "../components/Footer";
 import { GameViewLogo as Logo } from "../components/Icons";
 import Modal from "../components/Modal";
-import { Button, Score } from "../components/UIBasics";
+import { Button } from "../components/UIBasics";
 import { newBoard } from "../utils/game";
 import { getGridSize, getNPlayers } from "../utils/game_config";
 
@@ -20,16 +19,33 @@ type GameViewProps = {
 };
 
 const [showMenu, setShowMenu] = createSignal(false);
-
 function GameView(props: GameViewProps) {
+  createEffect(() => {
+    setShowMenu(false);
+  });
   const [boardKey, setBoardKey] = createSignal(0);
   return (
-    <main class="p-6 flex flex-col justify-between h-screen w-screen overflow-hidden">
-      <nav class="flex justify-between items-center mb-20">
+    <main class="p-6 md:px-10 md:pt-[37px] md:pb-[48px] lg:px-[165px] lg:pt-[67px] lg:pb-[74px] flex flex-col justify-between h-screen w-screen overflow-hidden">
+      <nav class=" flex justify-between items-center">
         <Logo />
-        <Button onclick={() => setShowMenu(true)} buttonType="PRIMARY">
-          menu
-        </Button>
+        <div class="">
+          <div class="md:hidden">
+            <Button onclick={() => setShowMenu(true)} buttonType="PRIMARY">
+              menu
+            </Button>
+          </div>
+          <div class="hidden md:flex gap-4">
+            <Button
+              onclick={() => setBoardKey((boardKey) => boardKey + 1)}
+              buttonType="PRIMARY"
+            >
+              restart
+            </Button>
+            <Button onclick={props.goToMainMenu} buttonType="SECONDARY">
+              new game
+            </Button>
+          </div>
+        </div>
       </nav>
       {Board(boardKey())}
 
@@ -94,9 +110,8 @@ function Board(key: number) {
           const newScores = [...scores()];
           newScores[turn()] += 1;
           setScores(newScores);
-        } else {
-          setTurn((turn) => (turn + 1) % getNPlayers());
         }
+        setTurn((turn) => (turn + 1) % getNPlayers());
       });
 
       setTimeout(
@@ -110,10 +125,10 @@ function Board(key: number) {
   return (
     <>
       <div
-        class={`grid  ${
+        class={`grid w-fit mx-auto  ${
           getGridSize() === 4
-            ? "grid-cols-4 gap-[12.29px]"
-            : "grid-cols-6 gap-[9.12px]"
+            ? "grid-cols-4 gap-[12.29px] lg:gap-5"
+            : "grid-cols-6 gap-[9.12px] lg:gap-4"
         }`}
       >
         <For each={gameState}>
@@ -140,7 +155,7 @@ function Board(key: number) {
         scores={scores()}
         turn={turn()}
         isGameFinished={isGameFinished()}
-        showMenu={showMenu}
+        showMenu={showMenu} // TODO
       />
     </>
   );

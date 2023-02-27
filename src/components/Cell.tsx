@@ -15,7 +15,7 @@ import {
 
 type CellStatus = "HIDDEN" | "ACTIVE" | "FOUND";
 
-const iconClass = "scale-50 fill-white";
+const iconClass = "scale-50 md:scale-75 fill-white";
 function GetCellTheme(props: { value: number }) {
   if (getTheme() === "ICONS") {
     switch (props.value) {
@@ -45,8 +45,8 @@ function GetCellTheme(props: { value: number }) {
 }
 const size = () =>
   getGridSize() === 4
-    ? "w-[72.53px] h-[72.53px]  text-[2.5rem]"
-    : "w-[46.88px] h-[46.88px] text-[1.5rem]";
+    ? "w-[72.53px] h-[72.53px] md:w-[118px] md:h-[118px] md:text-number4x4  text-[2.5rem]"
+    : "w-[46.88px] h-[46.88px] md:w-[82px] md:h-[82px] md:text-number6x6 text-[1.5rem]";
 
 function Cell(props) {
   const [status, setStatus] = createSignal<CellStatus>("HIDDEN");
