@@ -1,29 +1,15 @@
-import {
-  createComputed,
-  createEffect,
-  createMemo,
-  createSignal,
-  For,
-  untrack,
-} from "solid-js";
-import Cell from "../components/Cell";
-import Footer from "../components/Footer";
+import { createEffect, createSignal } from "solid-js";
+import { setView } from "../App";
+import Board from "../components/Board";
+import GameOverModal from "../components/GameOverModal";
 import { GameViewLogo as Logo } from "../components/Icons";
 import Modal from "../components/Modal";
 import { Button } from "../components/UIBasics";
-import { newBoard } from "../utils/game";
-import { getGridSize, getNPlayers } from "../utils/game_config";
 
-type GameViewProps = {
-  goToMainMenu: () => void;
-};
+export const [showMenu, setShowMenu] = createSignal(false);
+export const [boardKey, setBoardKey] = createSignal(0);
 
-const [showMenu, setShowMenu] = createSignal(false);
-function GameView(props: GameViewProps) {
-  createEffect(() => {
-    setShowMenu(false);
-  });
-  const [boardKey, setBoardKey] = createSignal(0);
+function GameView() {
   return (
     <main class="p-6 md:px-10 md:pt-[37px] md:pb-[48px] lg:px-[165px] lg:pt-[67px] lg:pb-[74px] flex flex-col justify-between h-screen w-screen overflow-hidden">
       <nav class=" flex justify-between items-center">
@@ -41,14 +27,19 @@ function GameView(props: GameViewProps) {
             >
               restart
             </Button>
-            <Button onclick={props.goToMainMenu} buttonType="SECONDARY">
+            <Button
+              onclick={() => {
+                setView(0);
+                setShowMenu(false);
+              }}
+              buttonType="SECONDARY"
+            >
               new game
             </Button>
           </div>
         </div>
       </nav>
       {Board(boardKey())}
-
       <Modal
         cardClass="w-full p-6"
         showModal={setShowMenu}
@@ -65,7 +56,10 @@ function GameView(props: GameViewProps) {
           Restart
         </Button>
         <Button
-          onclick={props.goToMainMenu}
+          onclick={() => {
+            setView(0);
+            setShowMenu(false);
+          }}
           class="block w-full my-4"
           buttonType="SECONDARY"
         >
@@ -84,79 +78,3 @@ function GameView(props: GameViewProps) {
 }
 
 export default GameView;
-
-function Board(key: number) {
-  const gameState = newBoard();
-  const [chosenCells, setChosenCells] = createSignal<{
-    cells: [number | null, number | null];
-    isMatch: Boolean;
-  }>({ cells: [null, null], isMatch: false });
-  const [startCount, setStartCount] = createSignal(false);
-  const [nMoves, setNMoves] = createSignal(0);
-  const [scores, setScores] = createSignal([0, 0, 0, 0]);
-  const [turn, setTurn] = createSignal(0);
-  const isGameFinished = () =>
-    2 * scores().reduce((p, c) => p + c) === getGridSize() * getGridSize();
-
-  const isChoseTwo = () =>
-    chosenCells().cells[0] !== null && chosenCells().cells[1] !== null;
-  const initChosenCells = () =>
-    setChosenCells({ cells: [null, null], isMatch: false });
-  createEffect(() => {
-    if (isChoseTwo()) {
-      untrack(() => {
-        if (getNPlayers() === 1) setNMoves((moves) => moves + 1);
-        if (chosenCells().isMatch) {
-          const newScores = [...scores()];
-          newScores[turn()] += 1;
-          setScores(newScores);
-        }
-        setTurn((turn) => (turn + 1) % getNPlayers());
-      });
-
-      setTimeout(
-        () => {
-          initChosenCells();
-        },
-        chosenCells().isMatch ? 100 : 600
-      );
-    }
-  });
-  return (
-    <>
-      <div
-        class={`grid w-fit mx-auto  ${
-          getGridSize() === 4
-            ? "grid-cols-4 gap-[12.29px] lg:gap-5"
-            : "grid-cols-6 gap-[9.12px] lg:gap-4"
-        }`}
-      >
-        <For each={gameState}>
-          {(cell, index) => (
-            <Cell
-              index={index()}
-              value={cell}
-              setChosenCells={setChosenCells}
-              chosenCells={chosenCells}
-              gameState={gameState}
-              isChoseTwo={isChoseTwo}
-              startCount={startCount()}
-              setStartCount={setStartCount}
-              setScores={setScores}
-              scores={scores()}
-              turn={turn()}
-            />
-          )}
-        </For>
-      </div>
-      <Footer
-        startCount={startCount()}
-        nMoves={nMoves()}
-        scores={scores()}
-        turn={turn()}
-        isGameFinished={isGameFinished()}
-        showMenu={showMenu} // TODO
-      />
-    </>
-  );
-}

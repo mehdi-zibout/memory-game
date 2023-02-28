@@ -1,4 +1,5 @@
 import { For } from "solid-js";
+import { setView } from "../App";
 import { Logo } from "../components/Icons";
 import { Button, Card } from "../components/UIBasics";
 import {
@@ -10,11 +11,7 @@ import {
   getNPlayers,
 } from "../utils/game_config";
 
-type GameViewProps = {
-  startGame: () => void;
-};
-
-function StartGame(props: GameViewProps) {
+function StartGame() {
   return (
     <div
       class="w-screen h-screen bg-blue-500 flex justify-center
@@ -85,7 +82,7 @@ function StartGame(props: GameViewProps) {
             </For>
           </ul>
         </div>
-        <Button onclick={props.startGame} buttonType="MENUBIG">
+        <Button onclick={() => setView(1)} buttonType="MENUBIG">
           Start game
         </Button>
       </Card>

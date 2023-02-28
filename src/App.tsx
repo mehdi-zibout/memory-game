@@ -1,5 +1,6 @@
 import { Component, createSignal } from "solid-js";
 import { Portal } from "solid-js/web";
+import GameOverModal from "./components/GameOverModal";
 import Modal from "./components/Modal";
 import { Button } from "./components/UIBasics";
 import { Config } from "./utils/game_config";
@@ -12,25 +13,9 @@ export const [config, setConfig] = createSignal<Config>({
   gridSize: 4,
 });
 
+export const [view, setView] = createSignal(0);
 const App: Component = () => {
-  const [view, setView] = createSignal(0);
-  return (
-    <>
-      {view() === 0 ? (
-        <StartGame
-          startGame={() => {
-            setView(1);
-          }}
-        />
-      ) : (
-        <GameView
-          goToMainMenu={() => {
-            setView(0);
-          }}
-        />
-      )}
-    </>
-  );
+  return <>{view() === 0 ? <StartGame /> : <GameView />}</>;
 };
 
 export default App;

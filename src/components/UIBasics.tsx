@@ -73,6 +73,25 @@ export function Score(props) {
     </div>
   );
 }
+
+export function ScoreModal(props) {
+  return (
+    <div
+      class={`
+        bg-[#DFE7EC] text-blue-400 w-full rounded-[5px] p-4 flex ${props.class}  items-center  justify-between`}
+    >
+      <div
+        class={`
+          text-blue-200
+         text-[0.9375rem] lg:text-body`}
+      >
+        {props.title}
+      </div>
+      <div class={`text-[1.5rem] lg:text-h2`}>{props.value}</div>
+    </div>
+  );
+}
+
 type ButtonType = "MENUBIG" | "MENUSELECT" | "PRIMARY" | "SECONDARY";
 type ButtonProps = {
   isActive?: Boolean;
