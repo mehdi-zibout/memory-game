@@ -92,7 +92,7 @@ function Cell(props) {
       onclick={handleOnClick}
       class={`${size()} ${bgColor()} rounded-full flex justify-center items-center text-white transition duration-500`}
     >
-      {status() !== "HIDDEN" && <GetCellTheme value={props.value} />}
+      {<GetCellTheme value={props.value} />}
     </button>
   );
 }

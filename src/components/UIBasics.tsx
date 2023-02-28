@@ -78,14 +78,18 @@ export function ScoreModal(props) {
   return (
     <div
       class={`
-        bg-[#DFE7EC] text-blue-400 w-full rounded-[5px] p-4 flex ${props.class}  items-center  justify-between`}
+      ${
+        props.isWinner ? "bg-blue-500 text-white" : "bg-[#DFE7EC] text-blue-400"
+      }    w-full rounded-[5px] p-4 flex ${
+        props.class
+      }  items-center  justify-between`}
     >
       <div
         class={`
           text-blue-200
          text-[0.9375rem] lg:text-body`}
       >
-        {props.title}
+        {props.title} {props.isWinner ? "(Winner!)" : ""}
       </div>
       <div class={`text-[1.5rem] lg:text-h2`}>{props.value}</div>
     </div>
