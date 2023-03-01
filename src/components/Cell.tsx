@@ -40,6 +40,22 @@ function GetCellTheme(props: { value: number }) {
         return <Moon class={iconClass} />;
       case 10:
         return <Sun class={iconClass} />;
+      case 11:
+        return <span>🛎️</span>;
+      case 12:
+        return <span>🥚</span>;
+      case 13:
+        return <span>🥸</span>;
+      case 14:
+        return <span>🤓</span>;
+      case 15:
+        return <span>🤥</span>;
+      case 16:
+        return <span>💀</span>;
+      case 17:
+        return <span>🎈</span>;
+      case 18:
+        return <span>🥐</span>;
     }
   }
   return <>{props.value}</>;
@@ -92,7 +108,7 @@ function Cell(props) {
       onclick={handleOnClick}
       class={`${size()} ${bgColor()} rounded-full flex justify-center items-center text-white transition duration-500`}
     >
-      {<GetCellTheme value={props.value} />}
+      {status() !== "HIDDEN" && <GetCellTheme value={props.value} />}
     </button>
   );
 }

@@ -85,13 +85,13 @@ export function ScoreModal(props) {
       }  items-center  justify-between`}
     >
       <div
-        class={`
-          text-blue-200
-         text-[0.9375rem] lg:text-body`}
+        class={` ${props.isWinner ? "text-white" : "text-blue-200"}
+          
+         text-[0.9375rem] md:text-body`}
       >
         {props.title} {props.isWinner ? "(Winner!)" : ""}
       </div>
-      <div class={`text-[1.5rem] lg:text-h2`}>{props.value}</div>
+      <div class={`text-[1.5rem] md:text-h2`}>{props.value}</div>
     </div>
   );
 }
